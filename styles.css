@@ -1,0 +1,28 @@
+* {
+    padding: 0%;
+    margin: 0%;
+}
+
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
+.content {
+    width: 100%;
+    display: flex;
+    justify-items: center;
+    align-items: center;
+    margin: auto;
+    margin-top: 1%;
+}
+
+.cell {
+    margin: 0 2%;
+}
+
+.gutter.gutter-horizontal {
+    height: 100%;
+    background: rgba(0, 0, 0, 0.266);
+    cursor: col-resize;
+}

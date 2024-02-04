@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/split.js/1.6.0/split.min.js"></script>
+        <script src="js/utils.js" type="text/javascript"></script>
+        <link href="styles.css" rel="stylesheet">
+        <title>MML</title>
+    </head>
+
+    <body class="h-screen-flex items-center justify-center columns-1">
+        <div class="my-3.5">
+            <h1 class="text-center text-3xl font-black font-mono">Master Mind Language (MML)</h1>
+            <h3 class="text-center text-lg font-mono">A perfect language for creating fancy mindmap</h3>
+        </div>
+
+        <hr class="my-1.5 h-0.5 border-t-black"/>
+
+        <div class="h-4/5 content">
+            <div class="h-full cell in justify-center justify-items-center content-center items-center">
+                <h4 class="text-center font-semibold text-xl">Input</h4>
+                <textarea id="input" class="mt-1.5 bg-midnight border-solid border-black border rounded-lg p-2 resize-none w-full h-4/5"></textarea>
+                <div class="flex flex-row justify-center items-center mt-2.5 gap-2">
+                    <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+                        <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
+                        <span>Import</span>
+                    </button>
+                    <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+                        <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
+                        <span>Export</span>
+                    </button>
+                    <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center">
+                        <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
+                        <span>Clear</span>
+                    </button>
+                </div>
+            </div>
+            <div class="h-full cell out justify-center justify-items-center content-center items-center">
+                <h4 class="text-center font-semibold text-xl">Output</h4>
+                <textarea class="mt-1.5 bg-midnight border-solid border-black border rounded-lg p-2 resize-none w-full h-4/5"></textarea>
+                <div class="flex flex-row justify-center items-center mt-2.5">
+                    <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center flex-center">
+                        <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M13 8V2H7v6H2l8 8 8-8h-5zM0 18h20v2H0v-2z"/></svg>
+                        <span>Export</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <script>
+            Split(['.in', '.out'], {
+                gutterSize: 5,
+                minSize: [350, 500],
+                sizes: [25, 75]
+            });
+        </script>
+    </body>
+</html>
