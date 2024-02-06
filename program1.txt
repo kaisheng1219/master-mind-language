@@ -1,0 +1,8 @@
+-node1 = {
+    color: rgba(0.1, 0.1, 0.2, 0.3),
+    content: "overview",
+    shape: Square
+}
+
+root{content: "course"}
+    -node1

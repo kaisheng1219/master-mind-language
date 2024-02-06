@@ -39,8 +39,21 @@ function initTabs() {
 }
 
 function parse() {
-    scan();
-    topDownParse();
+    const tab1 = document.querySelector('#tab1');
+    const tab2 = document.querySelector('#tab2');
+
+    tab1.innerHTML = "";
+    tab2.innerHTML = "";
+
+    const scanner = new Scanner();
+    const tokens = scanner.scan();
+
+    if (tokens.length > 0) {
+        tokens.forEach(token => console.log(token));
+        // console.log(tokens);
+        // tab1.innerHTML = `<p>${tokens[0].tokenType, tokens[0].spelling}</p>`;
+    }
+    // topDownParse();
 }
 
 async function loadFile() {
@@ -55,7 +68,7 @@ async function saveFile(sourceId) {
     let [fileHandler] = await window.showSaveFilePicker(filePickerOpts);
     let stream = await fileHandler.createWriteable();
     if (sourceId === '#input')
-        await stream.write(ace.getValue());
+        await stream.write(editor.getValue());
     else {
         const source = document.getElementById(sourceId);
         await stream.write(source.innerHTML);
