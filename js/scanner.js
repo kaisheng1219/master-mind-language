@@ -5,7 +5,7 @@ class Scanner {
     currentKind;
     tokens;
     isAfterRoot;
-    isBeforeOpenBrace;
+    isBeforeNodeListDeclarator;
 
     constructor() {
         this.currentChar = editor.getValue()[0];
@@ -31,13 +31,13 @@ class Scanner {
             this.takeIt();
         
         while (this.currentIndex < editor.getValue().length) {
-            if (this.currentChar === '-') {
-                this.pushToken(TOKEN_TYPE.DASH, this.currentChar);
-                this.takeIt();
-            } else if (this.currentChar === '{') {
+            if (this.currentChar === '{') {
+                this.isBeforeNodeListDeclarator = false;
                 this.pushToken(TOKEN_TYPE.OPEN_BRACE, this.currentChar);
                 this.takeIt();
             } else if (this.currentChar === '}') {
+                if (this.isAfterRoot)
+                    this.isBeforeNodeListDeclarator = true;
                 this.pushToken(TOKEN_TYPE.CLOSE_BRACE, this.currentChar);
                 this.takeIt();
             } else if (this.currentChar === '(') {
@@ -49,15 +49,14 @@ class Scanner {
             } else if (this.currentChar === ':') {
                 this.pushToken(TOKEN_TYPE.COLON, this.currentChar);
                 this.takeIt();
-            } else if (this.currentChar === '=') {
-                this.pushToken(TOKEN_TYPE.ASSIGNMENT, this.currentChar);
-                this.takeIt();
             } else if (this.currentChar === ',') {
                 this.pushToken(TOKEN_TYPE.COMMA, this.currentChar);
                 this.takeIt();
             } else if (this.currentChar === '\n') {
-                this.pushToken(TOKEN_TYPE.LINE_BREAK, this.currentChar);
-                this.takeIt();
+                if (this.isAfterRoot && this.isBeforeNodeListDeclarator)
+                    this.validateLinebreak();
+                else
+                    this.takeIt();
             } else if (this.currentChar === '"') {
                 this.validateLiteral();
             } else if (this.isDigit(this.currentChar)) {
@@ -65,12 +64,12 @@ class Scanner {
             } else if (this.isLetter(this.currentChar)) {
                 this.validateKeywordOrIdentifier();
             } else if (this.isSpace(this.currentChar)) {
-                if (this.isAfterRoot && this.isBeforeOpenBrace)
+                if (this.isAfterRoot && this.isBeforeNodeListDeclarator)
                     this.validateIndent();
                 else 
                     this.takeIt();
             } else {
-                this.tokens.push(TOKEN_TYPE.INVALID, this.currentChar);
+                this.pushToken(TOKEN_TYPE.INVALID, this.currentChar);
                 this.takeIt();
             }
         }
@@ -116,20 +115,30 @@ class Scanner {
         while (this.isDigitOrLetter(this.currentChar))
             this.takeIt();
         
-        if (['root', 'content', 'textColor', 'bgColor', 'icon', 'shape', 'rgba'].includes(this.currentSpelling))
+        if (['root', 'content', 'textColor', 'bgColor', 'icon', 'shape', 'rgba'].includes(this.currentSpelling)) {
             this.pushToken(TOKEN_TYPE.KEYWORD, this.currentSpelling);
+            if (this.currentSpelling === 'root')
+                this.isAfterRoot = true;
+        }
         else if (['Square', 'RoundedSquare', 'Circle', 'Bang', 'Cloud', 'Hexagon'].includes(this.currentSpelling))
             this.pushToken(TOKEN_TYPE.SHAPE_ID, this.currentSpelling);
         else 
             this.pushToken(TOKEN_TYPE.IDENTIFIER, this.currentSpelling);
     }
 
+    validateLinebreak() {
+        this.currentSpelling = "";
+        while (this.currentChar === '\n')
+            this.takeIt();
+        this.pushToken(TOKEN_TYPE.LINE_BREAK, "\\n");
+        this.isBeforeNodeListDeclarator = true;
+    }
+
     validateIndent() {
         this.currentSpelling = "";
         while (this.isSpace(this.currentChar))
             this.takeIt();
-        if (this.currentSpelling.length >= 4)
-            this.pushToken(TOKEN_TYPE.INDENT, this.currentSpelling);
+        this.pushToken(TOKEN_TYPE.INDENT, this.currentSpelling);
     }
 
     pushToken(tokenType, spelling) {

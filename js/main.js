@@ -38,42 +38,69 @@ function initTabs() {
     });
 }
 
+function populateTokenTable(tbody, tokens) {
+    for (let i = 0; i < tokens.length; i++) {
+        const tr = tbody.insertRow();
+        tr.classList.add('border-b');
+        tr.classList.add(tokens[i].tokenType === TOKEN_TYPE.INVALID ? 'bg-red-200' : 'bg-white');
+        tr.innerHTML += 
+        `
+            <td class="whitespace-nowrap px-4 py-2 font-medium">${i+1}</td>
+            <td class="whitespace-nowrap px-4 py-2">${tokens[i].spelling}</td>
+            <td class="whitespace-nowrap px-4 py-2">${tokens[i].tokenType}</td>
+        `;
+    }
+}
+
 function parse() {
-    const tab1 = document.querySelector('#tab1');
-    const tab2 = document.querySelector('#tab2');
-
-    tab1.innerHTML = "";
-    tab2.innerHTML = "";
-
     const scanner = new Scanner();
     const tokens = scanner.scan();
 
     if (tokens.length > 0) {
-        tokens.forEach(token => console.log(token));
-        // console.log(tokens);
-        // tab1.innerHTML = `<p>${tokens[0].tokenType, tokens[0].spelling}</p>`;
+        const tokenTable = document.getElementById('token-table');
+        const tb = document.getElementById('tab1-body');
+        tokenTable.classList.remove('hidden');
+        tb.innerHTML = "";
+        populateTokenTable(tb, tokens);
+        // topDownParse();
+        // const tab2 = document.querySelector('#tab2');
+        // tab2.innerHTML = "";
+    } else {
+        const tokenTable = document.getElementById('token-table');
+        const tb = document.getElementById('tab1-body');
+        tokenTable.classList.add('hidden');
+        tb.innerHTML = "";
     }
-    // topDownParse();
 }
 
 async function loadFile() {
-    let [fileHandler] = await window.showOpenFilePicker(filePickerOpts);
-    let fileData = await fileHandler.getFile();
-    let text = await fileData.text();
-    editor.setValue(text);
-    editor.clearSelection();
+    try {
+        const fileHandler = await window.showOpenFilePicker(filePickerOpts);
+        const fileData = await fileHandler.getFile();
+        const text = await fileData.text();
+        editor.setValue(text);
+        editor.clearSelection();
+    } catch (ex) {
+        console.log(ex);
+    }
 }
 
 async function saveFile(sourceId) {
-    let [fileHandler] = await window.showSaveFilePicker(filePickerOpts);
-    let stream = await fileHandler.createWriteable();
-    if (sourceId === '#input')
-        await stream.write(editor.getValue());
-    else {
-        const source = document.getElementById(sourceId);
-        await stream.write(source.innerHTML);
+    try {
+        const fileHandler = await window.showSaveFilePicker(filePickerOpts);
+        const stream = await fileHandler.createWritable();
+        
+        if (sourceId === 'input') {
+            await stream.write(editor.getValue());
+        }
+        else {
+            const source = document.getElementById(sourceId);
+            await stream.write(source.innerHTML);
+        }
+        await stream.close();
+    } catch (ex) {
+        console.log(ex);
     }
-    await stream.close();
 }
 
 function clearEditor() {
