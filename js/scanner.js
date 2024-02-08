@@ -119,7 +119,7 @@ class Scanner {
         while (this.isDigitOrLetter(this.currentChar))
             this.takeIt();
         
-        if (['root', 'content', 'textColor', 'bgColor', 'icon', 'shape', 'rgba'].includes(this.currentSpelling)) {
+        if (['root', 'content', 'color', 'shape', 'rgba'].includes(this.currentSpelling)) {
             this.pushToken(TOKEN_TYPE.KEYWORD, this.currentSpelling);
             if (this.currentSpelling === 'root')
                 this.isAfterRoot = true;

@@ -1,4 +1,9 @@
 let editor;
+let tokenTable;
+let tb1; 
+let tab2;
+let correctPanel;
+
 const filePickerOpts = {
     types: [
         {
@@ -57,22 +62,31 @@ function parse() {
     const tokens = scanner.scan();
 
     if (tokens.length > 0) {
-        const tokenTable = document.getElementById('token-table');
-        const tb = document.getElementById('tab1-body');
         tokenTable.classList.remove('hidden');
-        tb.innerHTML = "";
-        populateTokenTable(tb, tokens);
+        tb1.innerHTML = "";
+        populateTokenTable(tb1, tokens);
         const parser = new Parser(tokens);
-        parser.parse();
-        console.log(`syntax is valid? ${parser.isValidSyntax}`);
-        // topDownParse();
-        // const tab2 = document.querySelector('#tab2');
-        // tab2.innerHTML = "";
+
+        try {
+            parser.parse();    
+            if (parser.isValidSyntax) {
+                correctPanel.classList.remove('hidden');
+            }
+        } catch (ex) {
+            const errorPanel = document.getElementById('errorBox');
+            errorPanel.classList.remove('hidden');
+            const errorText = document.getElementById('errorText');
+            errorText.innerHTML = parser.errorText;
+        }
     } else {
-        const tokenTable = document.getElementById('token-table');
-        const tb = document.getElementById('tab1-body');
+        tokenTable = document.getElementById('token-table');
+        tb1 = document.getElementById('tab1-body');
         tokenTable.classList.add('hidden');
-        tb.innerHTML = "";
+        tb1.innerHTML = "";
+
+        const errorPanel = document.getElementById('errorBox');
+        errorPanel.classList.add('hidden');
+        correctPanel.classList.add('hidden');
     }
 }
 
@@ -109,21 +123,9 @@ function clearEditor() {
 document.addEventListener("DOMContentLoaded", () => {
     initEditor();
     initTabs();
-    // var myInput = document.getElementById("input");
-    // if(myInput.addEventListener ) {
-    //     myInput.addEventListener('keydown',keyHandler,false);
-    // } else if(myInput.attachEvent ) {
-    //     myInput.attachEvent('onkeydown',keyHandler); /* damn IE hack */
-    // }
 
-    // function keyHandler(e) {
-    //     var TABKEY = 9;
-    //     if(e.keyCode == TABKEY) {
-    //         this.value += "    ";
-    //         if (e.preventDefault) {
-    //             e.preventDefault();
-    //         }
-    //         return false;
-    //     }
-    // }
+    tokenTable = document.getElementById('token-table');
+    tb1 = document.getElementById('tab1-body');
+    tab2 = document.getElementById('tab2');
+    correctPanel = document.getElementById('corrBox');
 });

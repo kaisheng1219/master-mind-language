@@ -5,6 +5,7 @@ class Parser {
     type;
     spelling;
     currentIndex;
+    errorText;
 
     constructor(tokens) {
         this.tokens = tokens;
@@ -23,12 +24,13 @@ class Parser {
             this.type = this.lookaheadToken.type;
             this.spelling = this.lookaheadToken.spelling;
         } else 
-            this.rejectToken();
+            this.rejectToken(expectedTokenType);
     }
 
-    rejectToken() {
+    rejectToken(expectedTokenType) {
         this.isValidSyntax = false;
-        throw new Error(`Unexpected token type found: ${this.lookaheadToken.type} (${this.lookaheadToken.spelling})`);
+        this.errorText = `Expecting ${expectedTokenType}, but found ${this.lookaheadToken.type} (${this.lookaheadToken.spelling})`;
+        throw new Error(`${this.errorText}`);
     }
 
     parse() {
@@ -42,18 +44,15 @@ class Parser {
         } else if (this.type === TOKEN_TYPE.KEYWORD && this.spelling === 'root') {
             this.parseNodeList();
         } else
-            this.rejectToken();
+            this.rejectToken(TOKEN_TYPE.EOF);
 
         if (this.type != TOKEN_TYPE.EOF && this.spelling != '$')
-            this.rejectToken();
-        else 
-            console.log('success');
+            this.rejectToken(TOKEN_TYPE.EOF);
     }
 
     parseNodeDeclarators() {
         if (this.type === TOKEN_TYPE.KEYWORD && this.spelling === 'root')
-            return;
-        
+            return;   
         this.parseNodeDeclarator();
         this.parseNodeDeclarators();
     }
@@ -69,7 +68,7 @@ class Parser {
             this.parseNodeConfigs();
             this.parseNodeListDeclarator();
         } else 
-            this.rejectToken();
+            this.rejectToken(`${TOKEN_TYPE.KEYWORD}: root`);
     }
 
     parseNodeListDeclarator() {
@@ -87,7 +86,7 @@ class Parser {
         else if (this.type === TOKEN_TYPE.OPEN_BRACE)
             this.parseNodeConfigs();
         else 
-            this.rejectToken();
+            this.rejectToken(TOKEN_TYPE.IDENTIFIER + " or " + TOKEN_TYPE.OPEN_BRACE);
     }
 
     parseNodeId() {
@@ -144,34 +143,12 @@ class Parser {
             this.parseFloat();
             this.acceptToken(TOKEN_TYPE.CLOSE_PAREN);
         } else 
-            this.rejectToken();
+            this.rejectToken(`${TOKEN_TYPE.KEYWORD}: rgba`);
     }
 
     parseFloat() {
         this.acceptToken(TOKEN_TYPE.FLOAT);
     }
-
-    parseLettersOrNumsOrSymbols() {
-
-    }
-
-    parseLettersOrNums() {}
-
-    parseLetterOrNumOrSymbol() {
-
-    }
-
-    parseLetterOrNum() {
-
-
-    }
-
-    parseNums() {}
-    parseNum() {}
-    parseLetter() {
-       
-    }
-    parseSymbol() {}
 
     parseIndent() {
         this.acceptToken(TOKEN_TYPE.INDENT);
@@ -179,9 +156,5 @@ class Parser {
 
     parseShapeId() {
         this.acceptToken(TOKEN_TYPE.SHAPE_ID);
-    }
-
-    isLetter(char) {
-        return (char >= 'a' && char <= 'z') || (char >= 'A' && char <= 'Z');
     }
 }
