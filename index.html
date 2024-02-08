@@ -7,6 +7,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/split.js/1.6.0/split.min.js"></script>
         <script src="js/token.js" type="text/javascript"></script>
         <script src="js/scanner.js" type="text/javascript"></script>
+        <script src="js/parser.js" type="text/javascript"></script>
         <script src="js/main.js" type="text/javascript"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.5/ace.js" type="text/javascript" charset="utf-8"></script>
         <link href="styles.css" rel="stylesheet">
@@ -66,9 +67,9 @@
                         <button class="p-2 rounded-tr-lg text-gray-700 font-bold flex-grow hover:bg-indigo-300 hover:bg-opacity-40" data-tab-target="#tab2">Syntax Analysis</button>
                     </div>
 
-                    <div class="grow overflow-y-scroll">
-                        <div id="tab1" class="h-max tab-content text-gray-700 hidden">
-                            <table id="token-table" class="w-full text-center text-sm font-light hidden">
+                    <div class="grow overflow-y-scroll rounded-bl-lg rounded-br-lg">
+                        <div id="tab1" class="h-max tab-content text-gray-700 rounded-bl-lg rounded-br-lg hidden">
+                            <table id="token-table" class="w-full text-center text-sm font-light rounded-bl-lg rounded-br-lg hidden">
                                 <thead class="border-b border-t bg-neutral-200 font-medium">
                                   <tr>
                                     <th scope="col" class="px-4 py-2">#</th>

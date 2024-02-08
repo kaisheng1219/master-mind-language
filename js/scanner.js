@@ -78,16 +78,20 @@ class Scanner {
     }
 
     validateLiteral() {
-        this.currentSpelling = "";
+        this.pushToken(TOKEN_TYPE.QUOTE, this.currentChar);
         this.takeIt();
+        this.currentSpelling = "";
         while (this.isDigitOrLetter(this.currentChar) || this.isSymbol(this.currentChar))
             this.takeIt();
+
+        this.pushToken(TOKEN_TYPE.LITERAL, this.currentSpelling);
+
         if (this.currentChar === '"') {
+            this.pushToken(TOKEN_TYPE.QUOTE, this.currentChar);
             this.takeIt();
-            this.pushToken(TOKEN_TYPE.LITERAL, this.currentSpelling);
         } else {
-            this.takeIt();
             this.pushToken(TOKEN_TYPE.INVALID, this.currentSpelling);
+            this.takeIt();
         }
     }
 
@@ -172,5 +176,4 @@ class Scanner {
     isSpaceOrLinebreak(char) {
         return this.isSpace(char) || this.isLinebreak(char);
     }
-
 }

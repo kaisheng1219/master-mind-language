@@ -42,12 +42,12 @@ function populateTokenTable(tbody, tokens) {
     for (let i = 0; i < tokens.length; i++) {
         const tr = tbody.insertRow();
         tr.classList.add('border-b');
-        tr.classList.add(tokens[i].tokenType === TOKEN_TYPE.INVALID ? 'bg-red-200' : 'bg-white');
+        tr.classList.add(tokens[i].type === TOKEN_TYPE.INVALID ? 'bg-red-200' : 'bg-white');
         tr.innerHTML += 
         `
             <td class="whitespace-nowrap px-4 py-2 font-medium">${i+1}</td>
             <td class="whitespace-nowrap px-4 py-2">${tokens[i].spelling}</td>
-            <td class="whitespace-nowrap px-4 py-2">${tokens[i].tokenType}</td>
+            <td class="whitespace-nowrap px-4 py-2">${tokens[i].type}</td>
         `;
     }
 }
@@ -62,6 +62,9 @@ function parse() {
         tokenTable.classList.remove('hidden');
         tb.innerHTML = "";
         populateTokenTable(tb, tokens);
+        const parser = new Parser(tokens);
+        parser.parse();
+        console.log(`syntax is valid? ${parser.isValidSyntax}`);
         // topDownParse();
         // const tab2 = document.querySelector('#tab2');
         // tab2.innerHTML = "";
@@ -74,15 +77,11 @@ function parse() {
 }
 
 async function loadFile() {
-    try {
-        const fileHandler = await window.showOpenFilePicker(filePickerOpts);
-        const fileData = await fileHandler.getFile();
-        const text = await fileData.text();
-        editor.setValue(text);
-        editor.clearSelection();
-    } catch (ex) {
-        console.log(ex);
-    }
+    let [fileHandler] = await window.showOpenFilePicker(filePickerOpts);
+    const fileData = await fileHandler.getFile();
+    const text = await fileData.text();
+    editor.setValue(text);
+    editor.clearSelection();
 }
 
 async function saveFile(sourceId) {

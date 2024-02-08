@@ -3,12 +3,11 @@ const TOKEN_TYPE = {
     CLOSE_BRACE: 'CLOSE_BRACE',
     OPEN_PAREN: 'OPEN_PAREN',
     CLOSE_PAREN: 'CLOSE_PAREN',
-    ASSIGNMENT: 'ASSIGNMENT',
     COLON: 'COLON',
     COMMA: 'COMMA',
+    QUOTE: 'QUOTE',
     INDENT: 'INDENT',
     LINE_BREAK: 'LINE_BREAK',
-    DASH: 'DASH',
     LITERAL: 'LITERAL',
     KEYWORD: 'KEYWORD',
     IDENTIFIER: 'IDENTIFIER',
@@ -19,11 +18,11 @@ const TOKEN_TYPE = {
 }
 
 class Token {
-    tokenType;
+    type;
     spelling;
 
     constructor(tokenType, spelling) {
-        this.tokenType = tokenType;
+        this.type = tokenType;
         this.spelling = spelling;
     }
 }
