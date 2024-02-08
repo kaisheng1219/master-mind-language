@@ -3,6 +3,9 @@ let tokenTable;
 let tb1; 
 let tab2;
 let correctPanel;
+let errorPanel;
+let saverTokens = [];
+let parseResult = "";
 
 const filePickerOpts = {
     types: [
@@ -44,6 +47,7 @@ function initTabs() {
 }
 
 function populateTokenTable(tbody, tokens) {
+    saverTokens = [];
     for (let i = 0; i < tokens.length; i++) {
         const tr = tbody.insertRow();
         tr.classList.add('border-b');
@@ -54,6 +58,7 @@ function populateTokenTable(tbody, tokens) {
             <td class="whitespace-nowrap px-4 py-2">${tokens[i].spelling}</td>
             <td class="whitespace-nowrap px-4 py-2">${tokens[i].type}</td>
         `;
+        saverTokens.push(tokens[i]);
     }
 }
 
@@ -70,6 +75,7 @@ function parse() {
         try {
             parser.parse();    
             if (parser.isValidSyntax) {
+                parseResult = parser.resultText;
                 correctPanel.classList.remove('hidden');
             }
         } catch (ex) {
@@ -79,12 +85,8 @@ function parse() {
             errorText.innerHTML = parser.errorText;
         }
     } else {
-        tokenTable = document.getElementById('token-table');
-        tb1 = document.getElementById('tab1-body');
         tokenTable.classList.add('hidden');
         tb1.innerHTML = "";
-
-        const errorPanel = document.getElementById('errorBox');
         errorPanel.classList.add('hidden');
         correctPanel.classList.add('hidden');
     }
@@ -107,8 +109,16 @@ async function saveFile(sourceId) {
             await stream.write(editor.getValue());
         }
         else {
-            const source = document.getElementById(sourceId);
-            await stream.write(source.innerHTML);
+            const tabId = document.querySelector('.tab-content.hidden').id;
+            if (tabId === 'tab1') {
+                await stream.write(parseResult);
+            } else {
+                let saverText = '#, value, token';
+                for (let i = 0; i < saverTokens.length; i++) {
+                    saverText += `\n${i+1}, ${saverTokens[i].spelling}, ${saverTokens[i].type}`;
+                }
+                await stream.write(saverText);
+            }
         }
         await stream.close();
     } catch (ex) {
@@ -118,6 +128,10 @@ async function saveFile(sourceId) {
 
 function clearEditor() {
     editor.setValue("", 0);
+    tokenTable.classList.add('hidden');
+    tb1.innerHTML = "";
+    errorPanel.classList.add('hidden');
+    correctPanel.classList.add('hidden');
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -128,4 +142,5 @@ document.addEventListener("DOMContentLoaded", () => {
     tb1 = document.getElementById('tab1-body');
     tab2 = document.getElementById('tab2');
     correctPanel = document.getElementById('corrBox');
+    errorPanel = document.getElementById('errorBox');
 });

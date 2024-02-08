@@ -60,7 +60,6 @@
             </div>
             <div id="output" class="h-full cell out justify-center justify-items-center content-center items-center">
                 <h4 class="text-center font-semibold text-xl">Output</h4>
-                <!-- <textarea class="mt-1.5 bg-midnight border-solid border-black border rounded-lg p-2 resize-none w-full h-4/5 align-top"></textarea> -->
                 <div class="flex flex-col tab-section mt-1.5 bg-midnight border-solid border-black border rounded-lg w-full h-4/5">
                     <div class="flex flex-row flex-wrap">
                         <button class="p-2 rounded-tl-lg text-gray-700 font-bold flex-grow hover:bg-indigo-300 hover:bg-opacity-40" data-tab-target="#tab1">Lexical Analysis</button>
@@ -92,8 +91,9 @@
                                     <p class="block font-sans text-base antialiased font-bold leading-relaxed text-inherit">
                                         Syntax Error!
                                     </p>
-                                    <ul class="mt-2 ml-2 list-disc list-inside">
+                                    <ul class="mt-2 ml-2 list-disc list-outside">
                                         <li id="errorText"></li>
+                                        <li>You may export the logs of the parsing.</li>
                                     </ul>
                                 </div>
                             </div>
@@ -107,8 +107,9 @@
                                     <p class="block font-sans text-base antialiased font-bold leading-relaxed text-inherit">
                                         Parsed Successfully!
                                     </p>
-                                    <ul class="mt-2 ml-2 list-disc list-inside">
+                                    <ul class="mt-2 ml-2 list-disc list-outside">
                                         <li>Program has no syntax error.</li>
+                                        <li>You may export the logs of the parsing.</li>
                                     </ul>
                                 </div>
                             </div>
