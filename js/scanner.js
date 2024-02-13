@@ -110,7 +110,7 @@ class Scanner {
                 this.pushToken(TOKEN_TYPE.INVALID, this.currentSpelling);
         } else {
             this.pushToken(TOKEN_TYPE.INVALID, this.currentSpelling);
-            this.takeIt();
+            // this.takeIt();
         }
     }
 

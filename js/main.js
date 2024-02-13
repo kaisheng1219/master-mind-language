@@ -76,10 +76,13 @@ function parse() {
             parser.parse();    
             if (parser.isValidSyntax) {
                 parseResult = parser.resultText;
+                errorPanel.classList.add('hidden');
                 correctPanel.classList.remove('hidden');
+            } else {
+                console.log('invalid syntax');
             }
         } catch (ex) {
-            const errorPanel = document.getElementById('errorBox');
+            correctPanel.classList.add('hidden');
             errorPanel.classList.remove('hidden');
             const errorText = document.getElementById('errorText');
             errorText.innerHTML = parser.errorText;
@@ -89,6 +92,8 @@ function parse() {
         tb1.innerHTML = "";
         errorPanel.classList.add('hidden');
         correctPanel.classList.add('hidden');
+        saverTokens = [];
+        parseResult = "";
     }
 }
 
@@ -132,6 +137,8 @@ function clearEditor() {
     tb1.innerHTML = "";
     errorPanel.classList.add('hidden');
     correctPanel.classList.add('hidden');
+    saverTokens = [];
+    parseResult = "";
 }
 
 document.addEventListener("DOMContentLoaded", () => {
